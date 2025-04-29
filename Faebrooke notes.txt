@@ -1,0 +1,18 @@
+Weapons:
+staff
+sword 
+knife
+
+Abilities:
+healing
+mind control
+Talk to animals
+
+Quests:
+Each path unlocks as the user progresses
+Each completed path allows the user to rebuild that section of the village
+Allow the user to decide which path to take
+Increase the difficulty of remaining paths once a path is complete
+Final boss's path can be found once all other boss's are defeated 
+N,E,S,W paths lead you to a village you must save from the boss once defeated you can purchase items from the village
+NE,NW,SE,SW paths lead to different animal habitats that have started wither away you must defeat the boss causing this
