@@ -13,7 +13,14 @@ config_version=5
 config/name="Faebrooke"
 run/main_scene="uid://df880fyf0vmh0"
 config/features=PackedStringArray("4.4", "Forward Plus")
-config/icon="res://icon.svg"
+
+[editor]
+
+version_control/autoload_on_startup=true
+
+[global_group]
+
+player=""
 
 [input]
 

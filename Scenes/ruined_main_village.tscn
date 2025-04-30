@@ -1,6 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://df880fyf0vmh0"]
+[gd_scene load_steps=9 format=3 uid="uid://df880fyf0vmh0"]
 
 [ext_resource type="PackedScene" uid="uid://d1x0pq35js5t0" path="res://Scenes/player.tscn" id="1_ry60y"]
+[ext_resource type="Script" uid="uid://cnubslywoy7q" path="res://Scripts/spawn_trigger.gd" id="2_wb38i"]
+[ext_resource type="PackedScene" uid="uid://hngnqdfoq18u" path="res://Scenes/Enemy.tscn" id="3_8yoqn"]
+[ext_resource type="PackedScene" uid="uid://cvhftcham2r4v" path="res://Scenes/hud.tscn" id="4_ydiym"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4hjm4"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -17,6 +20,8 @@ sdfgi_enabled = true
 glow_enabled = true
 fog_enabled = true
 fog_density = 0.0001
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8yoqn"]
 
 [node name="Ruined Main Village" type="Node3D"]
 
@@ -41,5 +46,18 @@ size = Vector3(1000, 1, 1000)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37645, 0.438184, -2.584)
 use_collision = true
 
-[node name="Player" parent="." instance=ExtResource("1_ry60y")]
+[node name="Player" parent="." groups=["player"] instance=ExtResource("1_ry60y")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.45488, -0.0297065, -4.55485)
+
+[node name="SpawnTrigger" type="Area3D" parent="." node_paths=PackedStringArray("spawn_position")]
+script = ExtResource("2_wb38i")
+enemy_scene = ExtResource("3_8yoqn")
+spawn_position = NodePath("../Map/CSGBox3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SpawnTrigger"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.378682, 0.422904, -3.59934)
+shape = SubResource("BoxShape3D_8yoqn")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Hud" parent="CanvasLayer" instance=ExtResource("4_ydiym")]

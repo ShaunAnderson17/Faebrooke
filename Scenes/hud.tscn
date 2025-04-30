@@ -1,0 +1,76 @@
+[gd_scene load_steps=5 format=3 uid="uid://cvhftcham2r4v"]
+
+[ext_resource type="Script" uid="uid://c6jiy4k2e762m" path="res://Scripts/hud.gd" id="1_e0onf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fccik"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bjfho"]
+bg_color = Color(0.533333, 0.0313726, 0.0313726, 1)
+
+[sub_resource type="FontVariation" id="FontVariation_e0onf"]
+
+[node name="Hud" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_e0onf")
+metadata/_edit_horizontal_guides_ = [17.0]
+
+[node name="HealthLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 314.0
+offset_top = 614.0
+offset_right = 380.0
+offset_bottom = 649.0
+theme_override_colors/font_color = Color(0, 0, 0.298039, 1)
+theme_override_colors/font_shadow_color = Color(0.498039, 0.137255, 0.666667, 1)
+text = "100/100"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+custom_minimum_size = Vector2(200, 1)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 383.0
+offset_top = 624.0
+offset_right = 838.0
+offset_bottom = 647.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_fccik")
+theme_override_styles/fill = SubResource("StyleBoxFlat_bjfho")
+value = 100.0
+
+[node name="DeathScreen" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 406.0
+offset_top = 112.0
+offset_right = 499.0
+offset_bottom = 194.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3.909, 5.24)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DeathScreen"]
+layout_mode = 2
+
+[node name="DeathLabel" type="Label" parent="DeathScreen/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_e0onf")
+text = "  You Died!"
+
+[node name="RespawnButton" type="Button" parent="DeathScreen/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "Respawn"
