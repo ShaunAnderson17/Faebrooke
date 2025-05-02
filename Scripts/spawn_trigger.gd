@@ -16,3 +16,6 @@ func spawn_enemy():
 		var enemy = enemy_scene.instantiate() 
 		get_tree().current_scene.add_child(enemy) 
 		enemy.global_transform.origin = spawn_position.global_transform.origin
+
+func reset():
+	has_spawned = false

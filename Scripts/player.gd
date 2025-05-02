@@ -17,41 +17,58 @@ var running = false
 var health: float
 var hud: Control
 var initial_position: Vector3
+var respawn_point: Node3D
 
 func _ready():
 	health = max_health
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	add_to_group("player")
-	initial_position = global_transform.origin # Store initial position
+	initial_position = global_transform.origin
 	hud = get_tree().current_scene.get_node("CanvasLayer/Hud")
-	if hud:
-		call_deferred("initialize_hud")
-	else:
+	if not hud:
 		push_error("HUD node not found in scene tree.")
-
-func initialize_hud():
-	hud.player = self
-	hud.update_health(health)
+	respawn_point = get_tree().current_scene.get_node("RespawnPoint")
+	if respawn_point:
+		print("RespawnPoint found at: ", respawn_point.global_transform.origin)
+	else:
+		push_error("RespawnPoint node not found in scene tree.")
 
 func take_damage(damage: float):
 	health -= damage
 	health = clamp(health, 0, max_health)
 	if hud:
-		hud.update_health(health) 
+		hud.update_health(health)
+	print("Player took %s damage. Health: %s" % [damage, health])
 	if health <= 0:
 		die()
 
 func die():
+	print("Player died! Mouse mode: ", Input.MOUSE_MODE_VISIBLE)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if hud and hud.has_method("show_death_screen"):
 		hud.show_death_screen()
 
 func respawn():
+	print("Respawning player...")
 	health = max_health
-	global_transform.origin = initial_position
+	if respawn_point:
+		global_transform.origin = respawn_point.global_transform.origin
+		print("Respawned at RespawnPoint: ", global_transform.origin)
+	else:
+		push_error("Cannot respawn: RespawnPoint is null.")
+		global_transform.origin = Vector3.ZERO
+		print("Respawned at fallback position: ", global_transform.origin)
 	if hud:
 		hud.update_health(health)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	var enemy = get_tree().get_first_node_in_group("enemy")
+	if enemy:
+		print("Removing enemy: ", enemy)
+		enemy.queue_free()
+	var trigger = get_tree().current_scene.get_node("SpawnTrigger")
+	if trigger and trigger.has_method("reset"):
+		print("Resetting SpawnTrigger")
+		trigger.reset()
 
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -61,6 +78,8 @@ func _input(event):
 		var cam_rot = camera_mount.rotation_degrees
 		cam_rot.x = clamp(cam_rot.x, -90, 90)
 		camera_mount.rotation_degrees = cam_rot
+	elif event is InputEventMouseMotion:
+		print("Mouse left click detected at ", event.position)
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("run"):

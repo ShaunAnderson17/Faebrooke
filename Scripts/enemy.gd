@@ -11,6 +11,7 @@ var can_attack: bool = true
 func _ready():
 	# Find the player in the scene 
 	player = get_tree().get_first_node_in_group("player")
+	add_to_group("enemy")
 
 func _physics_process(delta):
 	if player and is_instance_valid(player):
@@ -45,4 +46,6 @@ func deal_damage():
 
 func start_attack_cooldown(_delta):
 	can_attack = false
-	attack_timer = attack_cooldown
+	attack_timer = attack_cooldown 
+ 
+	

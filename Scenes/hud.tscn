@@ -72,5 +72,9 @@ text = "  You Died!"
 
 [node name="RespawnButton" type="Button" parent="DeathScreen/VBoxContainer"]
 layout_mode = 2
+mouse_filter = 1
+mouse_force_pass_scroll_events = false
 theme_override_font_sizes/font_size = 10
 text = "Respawn"
+
+[connection signal="pressed" from="DeathScreen/VBoxContainer/RespawnButton" to="." method="_on_respawn_button_pressed"]
