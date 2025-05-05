@@ -3936,3 +3936,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00327632, 1.53579, 0)
 
 [node name="Camera3D" type="Camera3D" parent="camera_mount"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.762486, 0.453337, 1.66468)
+
+[node name="HandPosition" type="Node3D" parent="camera_mount"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.285988, -0.255543, -0.258081)

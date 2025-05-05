@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://df880fyf0vmh0"]
+[gd_scene load_steps=10 format=3 uid="uid://df880fyf0vmh0"]
 
 [ext_resource type="PackedScene" uid="uid://d1x0pq35js5t0" path="res://Scenes/player.tscn" id="1_ry60y"]
 [ext_resource type="Script" uid="uid://cnubslywoy7q" path="res://Scripts/spawn_trigger.gd" id="2_wb38i"]
 [ext_resource type="PackedScene" uid="uid://hngnqdfoq18u" path="res://Scenes/Enemy.tscn" id="3_8yoqn"]
 [ext_resource type="PackedScene" uid="uid://cvhftcham2r4v" path="res://Scenes/hud.tscn" id="4_ydiym"]
+[ext_resource type="PackedScene" uid="uid://vilgktgmksbx" path="res://Scenes/item.tscn" id="5_ma7a6"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4hjm4"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -68,3 +69,13 @@ shape = SubResource("BoxShape3D_8yoqn")
 
 [node name="RespawnPoint" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.32278, 1.24364, -6.02189)
+
+[node name="Item" parent="." instance=ExtResource("5_ma7a6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.45106, 0.406506, -6.52534)
+item_name = "Cube"
+item_id = 1
+
+[node name="Item2" parent="." instance=ExtResource("5_ma7a6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.76754, 0.406506, -3.94358)
+item_name = "Sphere"
+item_id = 2

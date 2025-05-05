@@ -3,6 +3,7 @@ extends CharacterBody3D
 @onready var camera_mount: Node3D = $camera_mount
 @onready var animation_player: AnimationPlayer = $visuals/mixamo_base/AnimationPlayer
 @onready var visuals: Node3D = $visuals
+@onready var hand_position: Node3D = $camera_mount/HandPosition
 
 var SPEED = 3.0
 const JUMP_VELOCITY = 4.5
@@ -19,6 +20,12 @@ var hud: Control
 var initial_position: Vector3
 var respawn_point: Node3D
 
+var inventory: Array = []
+var hotbar: Array = []
+var hotbar_index: int = 0
+var nearby_item: Area3D = null
+var held_item: MeshInstance3D = null
+
 func _ready():
 	health = max_health
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -32,6 +39,52 @@ func _ready():
 		print("RespawnPoint found at: ", respawn_point.global_transform.origin)
 	else:
 		push_error("RespawnPoint node not found in scene tree.")
+	
+	hotbar.resize(5)
+	hotbar.fill(-1)
+	
+func set_nearby_item(item: Area3D):
+	nearby_item = item
+	if hud and hud.has_method("show_pickup_prompt"):
+		hud.show_pickup_prompt(item != null)
+
+func pickup_item():
+	if nearby_item:
+		var item_data = {
+			"id": nearby_item.item_id,
+			"name": nearby_item.item_name,
+			"mesh": nearby_item.get_node("MeshInstance3D").mesh
+		}
+		inventory.append(item_data)
+		print("Picked up item: ", item_data)
+		
+		var empty_slot = hotbar.find(-1)
+		if empty_slot != -1:
+			hotbar[empty_slot] = item_data.id
+			update_hotbar()
+		nearby_item.queue_free()
+		nearby_item = null
+		if hud:
+			hud.show_pickup_prompt(false)
+
+func update_hotbar():
+	if hud and hud.has_method("update_hotbar"):
+		hud.update_hotbar(hotbar, hotbar_index)
+	update_held_item()
+	
+func update_held_item():
+	if held_item:
+		held_item.queue_free()
+		held_item = null
+	var selected_item_id = hotbar[hotbar_index]
+	if selected_item_id != -1:
+		var item_data = inventory.filter(func(item): return item.id == selected_item_id)[0]
+		held_item = MeshInstance3D.new()
+		held_item.mesh = item_data.mesh
+		hand_position.add_child(held_item)
+		held_item.transform = Transform3D.IDENTITY
+		held_item.scale = Vector3(0.5, 0.5, 0.5) #scale item down when holding
+
 
 func take_damage(damage: float):
 	health -= damage
@@ -78,8 +131,28 @@ func _input(event):
 		var cam_rot = camera_mount.rotation_degrees
 		cam_rot.x = clamp(cam_rot.x, -90, 90)
 		camera_mount.rotation_degrees = cam_rot
-	elif event is InputEventMouseMotion:
-		print("Mouse left click detected at ", event.position)
+	elif event is InputEventKey and event.pressed:
+		# Pickup item with E key
+		if event.keycode == KEY_E and nearby_item:
+			pickup_item()
+		# Toggle inventory with I key
+		if event.keycode == KEY_I:
+			if hud and hud.has_method("toggle_inventory"):
+				hud.toggle_inventory()
+		# Hotbar selection with number keys
+		if event.keycode >= KEY_1 and event.keycode <= KEY_5:
+			var new_index = event.keycode - KEY_1
+			if new_index != hotbar_index:
+				hotbar_index = new_index
+				update_hotbar()
+	# Mouse wheel for hotbar selection
+	elif event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			hotbar_index = (hotbar_index - 1 + hotbar.size()) % hotbar.size()
+			update_hotbar()
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			hotbar_index = (hotbar_index + 1) % hotbar.size()
+			update_hotbar()
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("run"):

@@ -3,8 +3,13 @@ extends Control
 @onready var health_bar: ProgressBar = $HealthBar
 @onready var health_label: Label = $HealthLabel
 @onready var death_screen: PanelContainer = $DeathScreen
+@onready var pickup_prompt: Label = $PickupPrompt
+@onready var hotbar: HBoxContainer = $Hotbar
+@onready var inventory_panel: PanelContainer = $InventoryPanel
+@onready var inventory_item_list: VBoxContainer = $InventoryPanel/VBoxContainer/ItemList
 
 var player: Node
+var hotbar_slots: Array = []
 
 func _ready():
 	print("HUD _ready: Initializing...")
@@ -29,6 +34,38 @@ func _ready():
 		update_health_label()
 	else:
 		push_error("Player not found in 'player' group.")
+		
+	#initialize hotbar slots
+	for i in range(5):
+		hotbar_slots.append(hotbar.get_node("Slot" + str(i + 1)))
+	pickup_prompt.visible = false
+	inventory_panel.visible = false
+	
+func show_pickup_prompt(show: bool):
+	pickup_prompt.visible = show
+	pickup_prompt.text = "Press E to pickup item"
+	
+func update_hotbar(hotbar_data: Array, selected_index: int):
+	for i in range(hotbar_data.size()):
+		var slot = hotbar_slots[i]
+		if hotbar_data[i] == -1:
+			slot.texture = null
+		else:
+			slot.texture = preload("res://Assets/Screenshot 2025-05-05 134353.png")
+			slot.modulate = Color(1,1,0) if i == selected_index else Color(1,1,1)
+
+func toggle_inventory():
+	inventory_panel.visable = !inventory_panel.visable
+	if inventory_panel.visible:
+		update_inventory_display()
+
+func update_inventory_display():
+	for child in inventory_item_list.get_children():
+		child.queue_free()
+	for item in player.inventory:
+		var label = Label.new()
+		label.text = "Item: %s (ID: %d)" % [item.name, item.id]
+		inventory_item_list.add_child(label)
 
 func update_health(health: float):
 	if health_bar:

@@ -77,4 +77,43 @@ mouse_force_pass_scroll_events = false
 theme_override_font_sizes/font_size = 10
 text = "Respawn"
 
+[node name="PickupPrompt" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="Hotbar" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Slot1" type="TextureRect" parent="Hotbar"]
+layout_mode = 2
+
+[node name="Slot2" type="TextureRect" parent="Hotbar"]
+layout_mode = 2
+
+[node name="Slot3" type="TextureRect" parent="Hotbar"]
+layout_mode = 2
+
+[node name="Slot4" type="TextureRect" parent="Hotbar"]
+layout_mode = 2
+
+[node name="Slot5" type="TextureRect" parent="Hotbar"]
+layout_mode = 2
+
+[node name="InventoryPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="InventoryPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="InventoryPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ItemList" type="VBoxContainer" parent="InventoryPanel/VBoxContainer"]
+layout_mode = 2
+
 [connection signal="pressed" from="DeathScreen/VBoxContainer/RespawnButton" to="." method="_on_respawn_button_pressed"]
